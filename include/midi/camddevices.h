@@ -2,15 +2,15 @@
 #define MIDI_CAMDDEVICES_H
 
 /************************************************************************
-*     C. A. M. D.	(Commodore Amiga MIDI Driver)                   *
+*     C. A. M. D.	(Commodore Amiga MIDI Driver)                       *
 *************************************************************************
-*									*
-* Design & Development	- Roger B. Dannenberg				*
-*			- Jean-Christophe Dhellemmes			*
-*			- Bill Barton					*
-*                       - Darius Taghavy                                *
+*									                                    *
+*             Design & Development	- Roger B. Dannenberg				*
+*			                        - Jean-Christophe Dhellemmes		*
+*			                        - Bill Barton						*
+*                                   - Darius Taghavy                    *
 *                                                                       *
-* Copyright 1990 by Commodore Business Machines				*
+* Copyright 1990 by Commodore Business Machines							*
 *************************************************************************
 *
 * camddevices.h	- MIDI device driver include file
@@ -34,10 +34,19 @@ struct MidiDeviceData
     UWORD Version;
     UWORD Revision;
 
-    BOOL (*Init)(void);     /* called after LoadSeg() */
+	APTR (*Init)(struct ExecBase* SysBase asm("a6"));     /* called after LoadSeg() */
     void (*Expunge)(void);  /* called before UnLoadSeg() */
-    struct MidiPortData *(*OpenPort)();
-    void (*ClosePort)();
+    struct MidiPortData *(*OpenPort)(
+		struct MidiDeviceData *data asm("a3"),
+		LONG portnum asm("d0"),
+		ULONG (*transmitfunc)(APTR userdata asm("a2")) asm("a0"),
+		void (*receivefunc)(UWORD input asm("d0"), APTR userdata asm("a2")) asm("a1"),
+		APTR userdata asm("a2")
+	);
+    void (*ClosePort)(
+		struct MidiDeviceData *data asm("a3"),
+		LONG portnum asm("d0")
+	);
 
     UBYTE NPorts;	    /* number of ports */
     UBYTE Flags;	    /* currently none */
