@@ -48,7 +48,6 @@ struct PortInfo {
 struct PortInfo pi;
 
 void ActivateXmit(APTR userdata asm("a2"), ULONG portnum asm("d0")) {
-	Printf("hello\n");
 	Disable();
 
 	if ( !TimerRequestActive ) {
@@ -131,14 +130,10 @@ struct MidiPortData *OpenPort(
 	void (*receivefunc)(UWORD input asm("d0"), APTR userdata asm("a2")) asm("a1"),
 	APTR userdata asm("a2")
 ) {
-	unsigned char legacy, legacy_cfg, tmp;
-	unsigned char status;
-	int i;
+	DOSBase = (struct DosLibrary *)OpenLibrary("dos.library", 37);
 
-	Printf(LIBRARY_NAME " has been initialized!\n");
-
-	if (SysBase == NULL) {
-
+	if ( DOSBase == NULL) {
+		return FALSE;
 	}
 
 	static struct Library *camdBase = NULL;
@@ -156,24 +151,17 @@ struct MidiPortData *OpenPort(
 	}
 
 	// init i2c stuff here
-	I2C_Base = (struct I2C_Base *)OpenLibrary("i2c.library", 40);
+	I2C_Base = (struct I2C_Base *)OpenLibrary("i2c.library", 0);
 	if ( I2C_Base == NULL) {
-		Printf("Unable to open 'i2c.library' version 1.\n");
+		Printf("Unable to open 'i2c.library'.\n");
 		return FALSE;
 	}
 
-	DOSBase = (struct DosLibrary *)OpenLibrary("dos.library", 37);
-
-	if ( DOSBase == NULL) {
-		Printf("Couldn't open dos.library!\n");
-		return FALSE;
-	}
-
+	Printf(LIBRARY_NAME " Initialized\n");
 
 	pi.Transmit = transmitfunc;
 	pi.Receive = receivefunc;
 	pi.UserData = userdata;
-
 
 	TimerInterrupt.is_Node.ln_Type = NT_INTERRUPT;
 	TimerInterrupt.is_Node.ln_Pri = 0;

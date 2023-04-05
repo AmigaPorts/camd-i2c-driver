@@ -18,7 +18,7 @@ get_verstring(VERSTRING)
 string(REPLACE "$VER: ${PROJECT_NAME} " "" VERDATE "${VERSTRING}")
 
 add_link_options(-ffreestanding -nostdlib -nostartfiles -Wl,-e,__start)
-add_compile_options(-Os -m68040 -fbbb=- -fomit-frame-pointer)
+add_compile_options(-Os -m68040 -fomit-frame-pointer)
 add_compile_definitions(PRIVATE VERSION_STRING="${VERSTRING}" VERSION_NAME_DATE="${VERDATE}" VERSION="${VERSION}" REVISION="${REVISION}" __NOLIBBASE__=1)
 
 add_library(camd-i2c INTERFACE)
@@ -30,7 +30,7 @@ add_executable(camd-i2c.driver
 )
 
 target_include_directories(camd-i2c.driver PRIVATE src)
-target_link_libraries(camd-i2c.driver camd-i2c amiga)
+target_link_libraries(camd-i2c.driver camd-i2c)
 target_compile_definitions(camd-i2c.driver PUBLIC
 	LIBRARY_NAME="camd-i2c.driver"
 	LIBRARY_VERSION=${PROJECT_VERSION_MAJOR}
