@@ -34,7 +34,7 @@ struct MidiDeviceData
     UWORD Version;
     UWORD Revision;
 
-	APTR (*Init)(struct ExecBase* SysBase asm("a6"));     /* called after LoadSeg() */
+	BOOL (*Init)(struct ExecBase* SysBase asm("a6"));     /* called after LoadSeg() */
     void (*Expunge)(void);  /* called before UnLoadSeg() */
     struct MidiPortData *(*OpenPort)(
 		struct MidiDeviceData *data asm("a3"),
