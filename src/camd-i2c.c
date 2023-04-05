@@ -74,7 +74,6 @@ void Expunge() {
 LONG TimerInterruptCode(APTR data asm("a1"), APTR code asm("a5")) {
 	//struct I2C_Base *dev = (struct I2C_Base *)data;
 	struct timerequest *tr;
-	Printf("TimerInterruptCode\n");
 
 	tr = (struct timerequest *)GetMsg(ReplyMP);
 
