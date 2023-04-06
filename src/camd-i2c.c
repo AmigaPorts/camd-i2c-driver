@@ -39,9 +39,9 @@ struct PortInfo pi;
 void ActivateXmit(APTR userdata asm("a2"), ULONG portnum asm("d0")) {
 	ULONG b;
 	while ( (b = pi.Transmit(userdata)) != 0x100 ) {
-		Printf("still data\n\n");
 		if ((b & 0x00008100) == 0x0000 ) {
-			ULONG result = SendI2C(iobase, 1, (UBYTE *)(b & 255));
+			UBYTE midiData = b & 0xFF;
+			ULONG result = SendI2C(iobase, 1, &midiData);
 			if ((result & 0xFF) != 0 )
 				break;
 		}
