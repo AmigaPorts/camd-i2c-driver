@@ -38,12 +38,12 @@ struct PortInfo pi;
 
 void ActivateXmit(APTR userdata asm("a2"), ULONG portnum asm("d0")) {
 	ULONG b;
+	UWORD length = 0;
+	UBYTE midiData[256];
 	while ( (b = pi.Transmit(userdata)) != 0x100 ) {
 		if ((b & 0x00008100) == 0x0000 ) {
-			UBYTE midiData = b & 0xFF;
-			ULONG result = SendI2C(iobase, 1, &midiData);
-			if ((result & 0xFF) != 0 )
-				break;
+			midiData[length] = b & 0xFF;
+			length++;
 		}
 
 		if ((!CAMDv40 && (b & 0x00ff0000) != 0) ||
@@ -51,6 +51,8 @@ void ActivateXmit(APTR userdata asm("a2"), ULONG portnum asm("d0")) {
 			break;
 		}
 	}
+	if (length > 0)
+		SendI2C(iobase, length, midiData);
 }
 
 struct MidiPortData MidiPortData =

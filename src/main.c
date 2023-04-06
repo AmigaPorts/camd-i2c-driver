@@ -28,7 +28,7 @@
 #define NUMPORTS 1
 
 /*    Prototypes    */
-extern APTR Init(struct ExecBase *SysBase asm("a6"));
+extern BOOL Init(struct ExecBase *SysBase asm("a6"));
 
 extern void Expunge(void);
 
