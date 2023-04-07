@@ -1,3 +1,7 @@
+.DS_Store
+build*/
+install*/
+.vscode/
 *build/
 .idea/
 cmake-*/
