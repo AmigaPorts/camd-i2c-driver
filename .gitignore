@@ -6,3 +6,4 @@ install*/
 .idea/
 cmake-*/
 bin/
+external/
